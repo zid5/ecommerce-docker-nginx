@@ -1,0 +1,94 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f5f4f0">
+	<meta name="csrf-token" content="<%= csrfToken %>">
+	<title>Admin dashboard | Field & Form</title>
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/app.js" defer></script>
+</head>
+<body>
+	<%- include('partials/site-header', { currentUser, csrfToken }) %>
+	<main class="admin-main">
+		<div class="admin-title">
+			<div>
+				<p class="eyebrow"><span class="eyebrow-line"></span> Store management</p>
+				<h1>Your <em>dashboard.</em></h1>
+				<p class="admin-welcome">Signed in as <strong><%= currentUser.email %></strong></p>
+			</div>
+			<a class="button button-outline" href="/#products">View storefront <span aria-hidden="true">↗</span></a>
+		</div>
+
+		<div class="admin-layout">
+			<section class="admin-panel">
+				<div class="admin-panel-heading">
+					<p class="eyebrow">01 / Catalogue</p>
+					<h2>Add a product.</h2>
+					<p>Products are saved to your MongoDB Atlas store and shown on the storefront.</p>
+				</div>
+				<form class="product-form" id="admin-product-form">
+					<label for="name">Product name <span aria-hidden="true">*</span></label>
+					<input id="name" name="name" type="text" placeholder="e.g. Studio ceramic vase" maxlength="120" required>
+					<div class="form-row">
+						<div>
+							<label for="price">Price (USD) <span aria-hidden="true">*</span></label>
+							<div class="input-prefix"><span>$</span><input id="price" name="price" type="number" placeholder="0.00" min="0" step="0.01" required></div>
+						</div>
+						<div>
+							<label for="category">Category</label>
+							<input id="category" name="category" type="text" placeholder="e.g. Home" maxlength="60">
+						</div>
+					</div>
+					<label for="description">Description</label>
+					<textarea id="description" name="description" placeholder="What makes this one special?" rows="3" maxlength="500"></textarea>
+					<label for="imageUrl">Image URL</label>
+					<input id="imageUrl" name="imageUrl" type="url" placeholder="https://example.com/product.jpg">
+					<div class="form-footer">
+						<p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+						<button class="button button-dark submit-button" type="submit">
+							<span class="button-label">Add product</span><span aria-hidden="true">↗</span>
+						</button>
+					</div>
+				</form>
+			</section>
+
+			<section class="admin-panel inventory-panel">
+				<div class="admin-panel-heading inventory-heading">
+					<div>
+						<p class="eyebrow">02 / Inventory</p>
+						<h2>Your products <span class="inventory-count"><%= products.length %></span></h2>
+					</div>
+				</div>
+				<% if (products.length === 0) { %>
+					<div class="admin-empty">
+						<span class="empty-icon" aria-hidden="true">✳</span>
+						<p>Your collection is empty. Add your first product.</p>
+					</div>
+				<% } else { %>
+					<div class="inventory-list">
+						<% products.forEach((product) => { %>
+							<article class="inventory-item">
+								<div class="inventory-thumb">
+									<% if (product.imageUrl) { %>
+										<img src="<%= product.imageUrl %>" alt="" loading="lazy">
+									<% } else { %>
+										<span><%= (product.name || 'F').trim().charAt(0).toUpperCase() %></span>
+									<% } %>
+								</div>
+								<div class="inventory-description">
+									<h3><%= product.name || 'Untitled product' %></h3>
+									<p><%= product.category || 'The collection' %></p>
+								</div>
+								<p class="inventory-price">$<%= Number(product.price || 0).toFixed(2) %></p>
+							</article>
+						<% }); %>
+					</div>
+				<% } %>
+			</section>
+		</div>
+	</main>
+	<%- include('partials/site-footer') %>
+</body>
+</html>

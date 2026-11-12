@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f5f4f0">
+	<meta name="csrf-token" content="<%= csrfToken %>">
+	<title><%= mode === 'signup' ? 'Create account' : 'Sign in' %> | Field & Form</title>
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/app.js" defer></script>
+</head>
+<body class="auth-page">
+	<%- include('partials/site-header', { currentUser, csrfToken }) %>
+	<main class="auth-main">
+		<a class="auth-back" href="/">← Back to the collection</a>
+		<div class="auth-card">
+			<p class="eyebrow"><span class="eyebrow-line"></span> Field & Form</p>
+			<h1><% if (mode === 'signup') { %>A good place<br>to <em>begin.</em><% } else { %>Welcome<br><em>back.</em><% } %></h1>
+			<p class="auth-intro"><% if (mode === 'signup') { %>Create an account to keep your details close. New accounts start with customer access.<% } else { %>Sign in to your account and pick up where you left off.<% } %></p>
+
+			<form class="auth-form" id="auth-form" data-auth-action="<%= mode %>">
+				<% if (mode === 'signup') { %>
+					<label for="name">Your name</label>
+					<input id="name" name="name" type="text" autocomplete="name" maxlength="80" placeholder="First and last name" required>
+				<% } %>
+				<label for="email">Email address</label>
+				<input id="email" name="email" type="email" autocomplete="email" maxlength="254" placeholder="you@example.com" required>
+				<label for="password">Password</label>
+				<input id="password" name="password" type="password" autocomplete="<%= mode === 'signup' ? 'new-password' : 'current-password' %>" minlength="12" maxlength="72" placeholder="<%= mode === 'signup' ? 'At least 12 characters' : 'Your password' %>" required>
+				<p class="auth-hint"><% if (mode === 'signup') { %>Use at least 12 characters. Passwords are stored securely as hashes.<% } else { %>Your password is never shown or stored in plain text.<% } %></p>
+				<p class="form-message" id="form-message" role="status" aria-live="polite"></p>
+				<button class="button button-dark auth-submit" type="submit">
+					<span class="button-label"><%= mode === 'signup' ? 'Create account' : 'Sign in' %></span>
+					<span aria-hidden="true">↗</span>
+				</button>
+			</form>
+			<p class="auth-switch">
+				<% if (mode === 'signup') { %>Already have an account? <a href="/login">Sign in</a><% } else { %>New to Field & Form? <a href="/signup">Create an account</a><% } %>
+			</p>
+		</div>
+		<div class="auth-art" aria-hidden="true"><div class="auth-art-circle"></div><span>OBJECTS WITH INTENTION</span></div>
+	</main>
+	<%- include('partials/site-footer') %>
+</body>
+</html>

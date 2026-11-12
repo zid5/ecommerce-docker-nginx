@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#f5f4f0">
+	<meta name="csrf-token" content="<%= csrfToken %>">
+	<title>Field & Form | Everyday goods</title>
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/app.js" defer></script>
+</head>
+<body>
+	<%- include('partials/site-header', { currentUser, csrfToken }) %>
+
+	<main>
+		<section class="hero">
+			<div class="hero-copy">
+				<p class="eyebrow"><span class="eyebrow-line"></span> Thoughtfully selected, made to last</p>
+				<h1>Good things<br>for <em>every day.</em></h1>
+				<p class="hero-description">A considered collection of useful, beautiful things for the spaces and moments that make a life.</p>
+				<a class="button button-dark" href="#products">Explore the collection <span aria-hidden="true">↓</span></a>
+			</div>
+			<div class="hero-art" aria-hidden="true">
+				<div class="art-sun"></div>
+				<div class="art-orbit orbit-one"></div>
+				<div class="art-orbit orbit-two"></div>
+				<div class="art-vase"><span></span></div>
+				<div class="art-leaf leaf-one"></div>
+				<div class="art-leaf leaf-two"></div>
+				<div class="art-table"></div>
+				<div class="art-caption">OBJECTS WITH INTENTION&nbsp; · &nbsp;EST. 2024</div>
+			</div>
+			<div class="hero-index">01 <span></span> 03</div>
+		</section>
+
+		<section class="collection section-wrap" id="products">
+			<div class="section-heading">
+				<div>
+					<p class="eyebrow">The edit / 01</p>
+					<h2>Made for living.</h2>
+				</div>
+				<p class="section-note">A few of our current favourites.<br>Chosen with care, for you.</p>
+			</div>
+
+			<% if (typeof error !== 'undefined') { %>
+				<div class="notice notice-error" role="alert"><%= error %></div>
+			<% } %>
+			<div class="product-grid">
+				<% if (products.length === 0) { %>
+					<div class="empty-state">
+						<span class="empty-icon" aria-hidden="true">✳</span>
+						<h3>The shelves are waiting.</h3>
+						<p><% if (currentUser && currentUser.role === 'admin') { %><a href="/admin">Add the first product from your dashboard.</a><% } else { %>Our first products are on their way.<% } %></p>
+					</div>
+				<% } %>
+				<% products.forEach((product, index) => { %>
+					<article class="product-card">
+						<div class="product-image image-tone-<%= index % 4 %>">
+							<% if (product.imageUrl) { %>
+								<img src="<%= product.imageUrl %>" alt="<%= product.name || 'Product image' %>" loading="lazy">
+							<% } else { %>
+								<div class="image-placeholder" aria-hidden="true">
+									<span class="placeholder-ring"></span>
+									<span class="placeholder-glyph"><%= (product.name || 'F').trim().charAt(0).toUpperCase() %></span>
+								</div>
+							<% } %>
+							<span class="product-number">NO. <%= String(index + 1).padStart(2, '0') %></span>
+						</div>
+						<div class="product-info">
+							<div>
+								<p class="product-category"><%= product.category || 'The collection' %></p>
+								<h3><%= product.name || 'Untitled product' %></h3>
+								<% if (product.description) { %>
+									<p class="product-description"><%= product.description %></p>
+								<% } %>
+							</div>
+							<p class="product-price"><% if (product.price !== undefined && product.price !== null && product.price !== '') { %>$<%= Number(product.price).toFixed(2) %><% } else { %>Price on request<% } %></p>
+						</div>
+					</article>
+				<% }); %>
+			</div>
+		</section>
+
+		<section class="store-note">
+			<p class="eyebrow"><span class="eyebrow-line"></span> A considered collection</p>
+			<h2>Less, but better.</h2>
+			<p>Every piece is selected to bring a little more intention to everyday life.</p>
+			<% if (currentUser && currentUser.role === 'admin') { %>
+				<a class="button button-dark" href="/admin">Manage products <span aria-hidden="true">↗</span></a>
+			<% } %>
+		</section>
+	</main>
+
+	<%- include('partials/site-footer') %>
+</body>
+</html>

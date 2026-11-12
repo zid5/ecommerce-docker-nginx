@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="csrf-token" content="<%= csrfToken %>">
+	<title>Access restricted | Field & Form</title>
+	<link rel="stylesheet" href="/styles.css">
+	<script src="/app.js" defer></script>
+</head>
+<body>
+	<%- include('partials/site-header', { currentUser, csrfToken }) %>
+	<main class="forbidden-main">
+		<p class="eyebrow"><span class="eyebrow-line"></span> 403 / Restricted</p>
+		<h1>This area is<br><em>for admins.</em></h1>
+		<p>Your account does not have permission to manage the store.</p>
+		<a class="button button-dark" href="/">Back to the collection <span aria-hidden="true">↗</span></a>
+	</main>
+	<%- include('partials/site-footer') %>
+</body>
+</html>
